@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="es-PE">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Fogón de Luna — Cocina criolla en Barranco (demo)</title>
+  <meta name="description" content="Página de demostración de un restaurante ficticio en Barranco, Lima. Carta, pedidos por WhatsApp, ubicación y pagos con Yape o Plin." />
+  <meta name="robots" content="noindex, nofollow" />
+  <meta property="og:title" content="Fogón de Luna — Cocina criolla en Barranco (demo)" />
+  <meta property="og:description" content="Restaurante ficticio de demostración. Pedidos por WhatsApp, carta en soles, mapa y Yape/Plin." />
+  <meta property="og:type" content="website" />
+  <meta property="og:locale" content="es_PE" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,700;1,9..144,500&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --cream: #F6F0E6;
+      --paper: #FFFBF4;
+      --ink: #1A1410;
+      --muted: #5C5148;
+      --brick: #9B2C1A;
+      --brick-dark: #721F14;
+      --gold: #C4A46A;
+      --forest: #1E3C32;
+      --line: rgba(26, 20, 16, 0.12);
+      --shadow: 0 18px 40px rgba(26, 20, 16, 0.12);
+      --radius: 18px;
+      --max: 1120px;
+      --wa: #1F7A4D;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: Outfit, system-ui, sans-serif;
+      background: var(--cream);
+      color: var(--ink);
+      line-height: 1.55;
+      text-rendering: optimizeLegibility;
+    }
+    img { max-width: 100%; display: block; }
+    a { color: inherit; }
+    .wrap { width: min(100% - 32px, var(--max)); margin-inline: auto; }
+    .demo-banner {
+      background: var(--forest);
+      color: #F6F0E6;
+      text-align: center;
+      font-size: 0.82rem;
+      letter-spacing: 0.02em;
+      padding: 0.7rem 1rem;
+      font-weight: 500;
+    }
+    .demo-banner strong { color: var(--gold); }
+    header.nav {
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      background: rgba(246, 240, 230, 0.92);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--line);
+    }
+    .nav-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      min-height: 68px;
+    }
+    .logo {
+      font-family: Fraunces, Georgia, serif;
+      font-weight: 700;
+      font-size: 1.15rem;
+      text-decoration: none;
+      letter-spacing: -0.02em;
+    }
+    .logo span { color: var(--brick); }
+    .nav-links {
+      display: none;
+      gap: 1.25rem;
+      list-style: none;
+      font-size: 0.95rem;
+    }
+    .nav-links a { text-decoration: none; color: var(--muted); font-weight: 500; }
+    .nav-links a:hover { color: var(--ink); }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      background: var(--brick);
+      color: #fff;
+      text-decoration: none;
+      border: 0;
+      border-radius: 999px;
+      padding: 0.8rem 1.2rem;
+      font-weight: 600;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: background 0.2s ease, transform 0.2s ease;
+    }
+    .btn:hover { background: var(--brick-dark); }
+    .btn:active { transform: translateY(1px); }
+    .btn-wa { background: var(--wa); }
+    .btn-wa:hover { background: #17633e; }
+    .btn-ghost {
+      background: transparent;
+      color: var(--ink);
+      border: 1px solid var(--ink);
+    }
+    .btn-ghost:hover { background: var(--ink); color: var(--paper); }
+    .menu-toggle {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 44px;
+      height: 44px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--paper);
+      font-size: 1.2rem;
+    }
+    .mobile-panel {
+      display: none;
+      border-top: 1px solid var(--line);
+      padding: 0.75rem 1rem 1rem;
+      background: var(--paper);
+    }
+    .mobile-panel.open { display: grid; gap: 0.75rem; }
+    .mobile-panel a { text-decoration: none; font-weight: 500; padding: 0.35rem 0; }
+    .hero {
+      position: relative;
+      min-height: 88svh;
+      display: grid;
+      align-items: end;
+      color: #fff;
+      overflow: hidden;
+    }
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(180deg, rgba(26,20,16,0.15) 0%, rgba(26,20,16,0.72) 70%, rgba(26,20,16,0.88) 100%),
+        url("https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&fit=crop&w=1800&q=80") center/cover no-repeat;
+    }
+    .hero-content { position: relative; padding: 5.5rem 0 3.2rem; }
+    .eyebrow {
+      display: inline-block;
+      font-size: 0.78rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--gold);
+      font-weight: 600;
+      margin-bottom: 0.8rem;
+    }
+    h1, h2, h3 { font-family: Fraunces, Georgia, serif; letter-spacing: -0.03em; line-height: 1.15; }
+    h1 { font-size: clamp(2.4rem, 8vw, 5.2rem); max-width: 14ch; margin-bottom: 0.9rem; }
+    .lead { max-width: 36rem; font-size: 1.08rem; color: rgba(255,255,255,0.88); margin-bottom: 1.6rem; }
+    .hero-actions { display: flex; flex-wrap: wrap; gap: 0.75rem; }
+    .meta-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.7rem 1.2rem;
+      margin-top: 1.8rem;
+      font-size: 0.92rem;
+      color: rgba(255,251,244,0.86);
+    }
+    section { padding: 4.2rem 0; }
+    h2 { font-size: clamp(1.8rem, 4vw, 2.6rem); margin-bottom: 0.7rem; }
+    .section-intro { color: var(--muted); max-width: 38rem; margin-bottom: 2rem; }
+    .pills {
+      display: grid;
+      gap: 1rem;
+      grid-template-columns: 1fr;
+      margin-top: -2.8rem;
+      position: relative;
+      z-index: 2;
+    }
+    .pill {
+      background: var(--paper);
+      border-radius: var(--radius);
+      padding: 1.15rem 1.2rem;
+      box-shadow: var(--shadow);
+      border: 1px solid rgba(196,164,106,0.25);
+    }
+    .pill h3 { font-size: 1.12rem; margin-bottom: 0.3rem; }
+    .pill p { color: var(--muted); font-size: 0.95rem; }
+    .menu-grid { display: grid; gap: 1rem; }
+    .dish {
+      display: grid;
+      grid-template-columns: 92px 1fr auto;
+      gap: 0.9rem;
+      align-items: center;
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 0.7rem;
+    }
+    .dish img {
+      width: 92px;
+      height: 92px;
+      object-fit: cover;
+      border-radius: 12px;
+    }
+    .dish h3 { font-size: 1.05rem; margin-bottom: 0.2rem; }
+    .dish p { color: var(--muted); font-size: 0.9rem; }
+    .price {
+      font-weight: 700;
+      color: var(--brick);
+      white-space: nowrap;
+      font-size: 1rem;
+      padding-right: 0.4rem;
+    }
+    .tag {
+      display: inline-block;
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--forest);
+      font-weight: 700;
+      margin-bottom: 1rem;
+    }
+    .about {
+      display: grid;
+      gap: 1.5rem;
+    }
+    .about-photo {
+      border-radius: 24px;
+      min-height: 280px;
+      background:
+        linear-gradient(180deg, rgba(26,20,16,0.05), rgba(26,20,16,0.25)),
+        url("https://images.unsplash.com/photo-1559339352-11d035aa65de?auto=format&fit=crop&w=1400&q=80") center/cover no-repeat;
+    }
+    .pay-box {
+      margin-top: 1.2rem;
+      background: #fff;
+      border-left: 4px solid var(--gold);
+      border-radius: 0 14px 14px 0;
+      padding: 1rem 1.1rem;
+    }
+    .quotes { display: grid; gap: 1rem; }
+    .quote {
+      background: var(--paper);
+      border-radius: var(--radius);
+      padding: 1.3rem 1.2rem;
+      border: 1px solid var(--line);
+    }
+    .quote p { font-family: Fraunces, Georgia, serif; font-size: 1.15rem; font-style: italic; margin-bottom: 0.8rem; }
+    .example {
+      display: inline-block;
+      background: #F3E2A8;
+      color: #5A4708;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 0.2rem 0.5rem;
+      border-radius: 999px;
+      margin-bottom: 0.7rem;
+    }
+    .cite { color: var(--muted); font-size: 0.9rem; }
+    .location { display: grid; gap: 1.2rem; }
+    .map {
+      border: 0;
+      width: 100%;
+      min-height: 280px;
+      border-radius: 20px;
+      filter: grayscale(0.15);
+    }
+    .hours li { list-style: none; display: flex; justify-content: space-between; gap: 1rem; padding: 0.45rem 0; border-bottom: 1px solid var(--line); }
+    footer {
+      background: var(--ink);
+      color: #E8DFD2;
+      padding: 2.6rem 0 6.5rem;
+    }
+    footer a { color: #fff; }
+    .foot-grid { display: grid; gap: 1.4rem; }
+    .fine { font-size: 0.85rem; color: #B5A99C; margin-top: 1.4rem; }
+    .float-wa {
+      position: fixed;
+      right: 16px;
+      bottom: 16px;
+      z-index: 50;
+      box-shadow: 0 10px 24px rgba(31, 122, 77, 0.35);
+    }
+    @media (max-width: 699px) {
+      header.nav .btn { display: none; }
+    }
+    @media (min-width: 700px) {
+      .menu-toggle, .mobile-panel { display: none !important; }
+      .nav-links { display: flex; }
+      .pills { grid-template-columns: repeat(3, 1fr); }
+      .menu-grid { grid-template-columns: 1fr 1fr; }
+      .about, .location, .foot-grid, .quotes { grid-template-columns: 1fr 1fr; }
+      .about { align-items: center; }
+      .quotes { grid-template-columns: repeat(3, 1fr); }
+    }
+  </style>
+</head>
+<body>
+  <div class="demo-banner">Esta es una <strong>página de demostración</strong>. Fogón de Luna es un restaurante <strong>ficticio</strong> de Lima y no acepta pedidos reales.</div>
+  <header class="nav">
+    <div class="wrap nav-inner">
+      <a class="logo" href="#inicio">Fogón <span>de Luna</span></a>
+      <nav>
+        <ul class="nav-links">
+          <li><a href="#carta">Carta</a></li>
+          <li><a href="#nosotros">Nosotros</a></li>
+          <li><a href="#opiniones">Opiniones</a></li>
+          <li><a href="#ubicacion">Ubicación</a></li>
+        </ul>
+      </nav>
+      <a class="btn btn-wa" href="https://wa.me/51999000000?text=Hola%20Fog%C3%B3n%20de%20Luna%2C%20quiero%20hacer%20un%20pedido%20(esto%20es%20una%20demo)." aria-label="Pedir por WhatsApp">Pedir por WhatsApp</a>
+      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="mobile-panel" aria-label="Abrir menú">☰</button>
+    </div>
+    <div id="mobile-panel" class="mobile-panel">
+      <a href="#carta">Carta</a>
+      <a href="#nosotros">Nosotros</a>
+      <a href="#opiniones">Opiniones</a>
+      <a href="#ubicacion">Ubicación</a>
+    </div>
+  </header>
+
+  <section class="hero" id="inicio">
+    <div class="hero-bg" role="img" aria-label="Mesa servida en un restaurante, imagen ilustrativa"></div>
+    <div class="wrap hero-content">
+      <p class="eyebrow">Barranco, Lima</p>
+      <h1>Cocina criolla para pedir sin filas</h1>
+      <p class="lead">Causa, lomo saltado y anticuchos en un solo lugar. Mira la carta, elige tu plato y escríbenos por WhatsApp. Pagos con Yape o Plin.</p>
+      <div class="hero-actions">
+        <a class="btn btn-wa" href="https://wa.me/51999000000?text=Hola%20Fog%C3%B3n%20de%20Luna%2C%20quiero%20hacer%20un%20pedido%20(esto%20es%20una%20demo).">Pedir por WhatsApp</a>
+        <a class="btn btn-ghost" href="#carta" style="color:#fff;border-color:rgba(255,255,255,.7)">Ver la carta</a>
+      </div>
+      <div class="meta-row">
+        <span>Delivery y recojo en tienda</span>
+        <span>Mar–Dom, 12:00 a 23:00</span>
+        <span>Pasaje de la Luna 214, Barranco</span>
+      </div>
+    </div>
+  </section>
+
+  <div class="wrap">
+    <div class="pills">
+      <article class="pill">
+        <h3>Pedido por WhatsApp</h3>
+        <p>Elige de la carta y te confirmamos en minutos. El botón abre un chat con el pedido listo para enviar.</p>
+      </article>
+      <article class="pill">
+        <h3>Yape y Plin</h3>
+        <p>Paga con Yape, Plin, transferencia o en efectivo al recoger. Te enviamos el QR por el mismo chat.</p>
+      </article>
+      <article class="pill">
+        <h3>En el mapa</h3>
+        <p>Estamos en Barranco, a unas cuadras del malecón. Fácil para recojo o para sentarte en el local.</p>
+      </article>
+    </div>
+  </div>
+
+  <section id="carta">
+    <div class="wrap">
+      <p class="tag">Carta</p>
+      <h2>Platos que salen de la cocina, no de un PDF</h2>
+      <p class="section-intro">Precios en soles, con IGV incluido. Las fotos son ilustrativas. Esta carta es de ejemplo para la demostración.</p>
+      <div class="menu-grid">
+        <article class="dish">
+          <img src="https://images.unsplash.com/photo-1604909052743-94e838986d24?auto=format&fit=crop&w=400&q=80" alt="Ceviche ilustrativo" />
+          <div>
+            <h3>Ceviche clásico</h3>
+            <p>Pescado del día, leche de tigre, camote y cancha.</p>
+          </div>
+          <div class="price">S/ 38</div>
+        </article>
+        <article class="dish">
+          <img src="https://images.unsplash.com/photo-1529042410759-befbf28232d7?auto=format&fit=crop&w=400&q=80" alt="Causa limeña ilustrativa" />
+          <div>
+            <h3>Causa limeña</h3>
+            <p>Papa amarilla, ají amarillo y pollo o atún.</p>
+          </div>
+          <div class="price">S/ 26</div>
+        </article>
+        <article class="dish">
+          <img src="https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&w=400&q=80" alt="Lomo saltado ilustrativo" />
+          <div>
+            <h3>Lomo saltado</h3>
+            <p>Carne, cebolla, tomate, papas fritas y arroz.</p>
+          </div>
+          <div class="price">S/ 42</div>
+        </article>
+        <article class="dish">
+          <img src="https://images.unsplash.com/photo-1551183053-bf91a1d81141?auto=format&fit=crop&w=400&q=80" alt="Ají de gallina ilustrativo" />
+          <div>
+            <h3>Ají de gallina</h3>
+            <p>Crema de ají amarillo, pecanas y arroz.</p>
+          </div>
+          <div class="price">S/ 34</div>
+        </article>
+        <article class="dish">
+          <img src="https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&w=400&q=70" alt="Anticuchos ilustrativos" />
+          <div>
+            <h3>Anticuchos de corazón</h3>
+            <p>Con papa, choclo y salsa de ají.</p>
+          </div>
+          <div class="price">S/ 28</div>
+        </article>
+        <article class="dish">
+          <img src="https://images.unsplash.com/photo-1488477182946-bb01d8c2e0d9?auto=format&fit=crop&w=400&q=80" alt="Suspiro a la limeña ilustrativo" />
+          <div>
+            <h3>Suspiro a la limeña</h3>
+            <p>Manjar blanco y merengue de oporto.</p>
+          </div>
+          <div class="price">S/ 18</div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section id="nosotros">
+    <div class="wrap about">
+      <div class="about-photo" role="img" aria-label="Interior de un restaurante, imagen ilustrativa"></div>
+      <div>
+        <p class="tag">El local</p>
+        <h2>Un fogón de barrio, pensado para el celular</h2>
+        <p class="section-intro">Cocinamos recetas de casa en un local pequeño de Barranco. Esta historia es de ejemplo: en una landing real iría la voz del negocio, sus horarios y sus fotos.</p>
+        <div class="pay-box">
+          <h3>Cómo pagar</h3>
+          <p>Aceptamos <strong>Yape</strong>, <strong>Plin</strong>, transferencia y efectivo. Después de confirmar tu pedido por WhatsApp te enviamos el número o el QR. El delivery se coordina según el distrito.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="opiniones">
+    <div class="wrap">
+      <p class="tag">Opiniones</p>
+      <h2>Lo que dirían tus clientes</h2>
+      <p class="section-intro">Los testimonios de abajo son <strong>ejemplos inventados</strong> para esta demostración. En una página real se usan reseñas del negocio, con permiso.</p>
+      <div class="quotes">
+        <article class="quote">
+          <span class="example">Testimonio de ejemplo</span>
+          <p>“Pedí el lomo por WhatsApp y en 35 minutos ya estaba en casa. El Yape fue directo y sin vueltas.”</p>
+          <p class="cite">María R. · Miraflores</p>
+        </article>
+        <article class="quote">
+          <span class="example">Testimonio de ejemplo</span>
+          <p>“La causa estaba fresca y el mapa me dejó claro por dónde recoger. Ideal si no quieres entrar a una app de delivery.”</p>
+          <p class="cite">Diego C. · Barranco</p>
+        </article>
+        <article class="quote">
+          <span class="example">Testimonio de ejemplo</span>
+          <p>“Se siente como un negocio de verdad, no una plantilla. Pedir por WhatsApp es lo que ya hace mi barrio.”</p>
+          <p class="cite">Lucía P. · Surco</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section id="ubicacion">
+    <div class="wrap location">
+      <div>
+        <p class="tag">Ubicación</p>
+        <h2>Pásate o pide para llevar</h2>
+        <p class="section-intro">Dirección de demostración, no corresponde a un local real. El mapa muestra el distrito de Barranco, en Lima.</p>
+        <p><strong>Pasaje de la Luna 214, Barranco, Lima</strong><br />Teléfono de demo: +51 999 000 000</p>
+        <ul class="hours" style="margin-top:1rem">
+          <li><span>Lunes</span><span>Cerrado</span></li>
+          <li><span>Martes a viernes</span><span>12:00–16:00 y 18:30–23:00</span></li>
+          <li><span>Sábado y domingo</span><span>12:00–23:00</span></li>
+        </ul>
+        <p style="margin-top:1.2rem"><a class="btn btn-wa" href="https://wa.me/51999000000?text=Hola%20Fog%C3%B3n%20de%20Luna%2C%20quiero%20reservar%20una%20mesa%20(esto%20es%20una%20demo).">Reservar por WhatsApp</a></p>
+      </div>
+      <iframe class="map" title="Mapa de Barranco, Lima" loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="https://maps.google.com/maps?q=Barranco%2C%20Lima%2C%20Per%C3%BA&z=15&output=embed"></iframe>
+    </div>
+  </section>
+
+  <footer>
+    <div class="wrap foot-grid">
+      <div>
+        <p class="logo" style="color:#fff">Fogón <span>de Luna</span></p>
+        <p style="margin-top:0.7rem">Cocina criolla en Barranco. Página de demostración para negocios locales en Perú.</p>
+      </div>
+      <div>
+        <p><strong>Contacto de demo</strong></p>
+        <p>WhatsApp: +51 999 000 000<br />Pagos: Yape y Plin<br />Pasaje de la Luna 214, Barranco</p>
+      </div>
+    </div>
+    <div class="wrap">
+      <p class="fine">Fogón de Luna es un restaurante ficticio creado solo para mostrar una landing page. Las fotos son de stock. Los testimonios están marcados como ejemplo. El número de WhatsApp no atiende pedidos reales.</p>
+    </div>
+  </footer>
+
+  <a class="btn btn-wa float-wa" href="https://wa.me/51999000000?text=Hola%20Fog%C3%B3n%20de%20Luna%2C%20quiero%20hacer%20un%20pedido%20(esto%20es%20una%20demo).">WhatsApp</a>
+  <script>
+    const toggle = document.querySelector(".menu-toggle");
+    const panel = document.getElementById("mobile-panel");
+    toggle.addEventListener("click", () => {
+      const open = panel.classList.toggle("open");
+      toggle.setAttribute("aria-expanded", open ? "true" : "false");
+    });
+    panel.querySelectorAll("a").forEach((link) => {
+      link.addEventListener("click", () => {
+        panel.classList.remove("open");
+        toggle.setAttribute("aria-expanded", "false");
+      });
+    });
+  </script>
+</body>
+</html>
